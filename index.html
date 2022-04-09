@@ -17,8 +17,9 @@
   </header>
   <div id="game">
     <section id="healStatus" class="container">
-      <h2>Available Heals</h2>
-      <h2>{{heals}}</h2>
+      <h2>Available Heals: {{heals}}</h2>
+
+      <h2>Available Special Attacks: {{specialAttacks}}</h2>
     </section>
     <section id="monster" class="container">
       <h2>Monster Health</h2>
@@ -32,13 +33,20 @@
         <div class="healthbar__value" :style="playerHealthBar"></div>
       </div>
     </section>
-    <section id="controls">
-      <button @click="attackMonster">ATTACK</button>
-      <button @click="specialAttack" :disabled="specialAttackIsAvailable">SPECIAL ATTACK</button>
-      <button @click="healPlayer" :disabled="!canHeal">HEAL</button>
-      <button>SURRENDER</button>
+
+    <section v-if="gameOver" class="container">
+      <h2>Game Over</h2>
+      <h3>{{results}}</h3>
+      <button @click="playAgain">New Game?</button>
     </section>
-    <section id="log" class="container">
+
+    <section id="controls" v-if="!gameOver">
+      <button @click="attackMonster">ATTACK</button>
+      <button @click="specialAttack" :disabled="!specialAttackIsAvailable">SPECIAL ATTACK</button>
+      <button @click="healPlayer" :disabled="!canHeal">HEAL</button>
+      <button @click="bigLoser">SURRENDER</button>
+    </section>
+    <section id="log" class="container" v-if="gameOver">
       <h2>Battle Log</h2>
       <ul></ul>
     </section>

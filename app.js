@@ -9,7 +9,10 @@ Vue.createApp({
       playerHealth: 100,
       monsterHealth: 100,
       currentRound: 0,
-      heals: 3
+      heals: 3,
+      specialAttacks: 3,
+      results: '',
+      gameOver: false
     };
   },
   methods: {
@@ -25,6 +28,9 @@ Vue.createApp({
       // Call attackPlayer function 
       this.attackPlayer()
 
+      // Call checkGameStatus function
+      this.checkGameStatus()
+
     },
 
     // Function for reducing the player's health
@@ -39,12 +45,18 @@ Vue.createApp({
       // Increment round
       this.currentRound++
 
+      // Decrement specialAttacks
+      this.specialAttacks = this.specialAttacks - 1;
+
       // Const refernece to getRandomValue function, which then gets taken out of the monster's health per attack
       const attackValue = getRandomValue(10, 25)
       this.monsterHealth -= attackValue
 
       // Call attackPlayer function 
       this.attackPlayer()
+
+      // Call checkGameStatus function
+      this.checkGameStatus()
     },
 
     // Function to heal player
@@ -66,6 +78,38 @@ Vue.createApp({
 
       // Call attackPlayer function 
       this.attackPlayer()
+
+      // Call checkGameStatus function
+      this.checkGameStatus()
+    },
+
+    // Function that checks the game status and ends it when the monster, the player or both reach 0 health or below
+    checkGameStatus() {
+      if (this.playerHealth <= 0 || this.monsterHealth <= 0) {
+        if (this.playerHealth > 0 && this.monsterHealth <= 0) {
+          this.results = 'Great Job! You Won!'
+        } else if (this.playerHealth <= 0 && this.monsterHealth > 0) {
+          this.results = 'Sorry! You Lost'
+        } else {
+          this.results = 'It Is A Draw!'
+        }
+        this.gameOver = true
+      }
+    },
+
+    // Function asking player if they would like to play another game
+    playAgain() {
+      this.playerHealth = 100;
+      this.monsterHealth = 100;
+      this.heals = 3;
+      this.specialAttacks = 3
+      this.gameOver = false
+    },
+
+    // Function the gets called if player decides to surrender
+    bigLoser() {
+      this.playerHealth = 0;
+      this.checkGameStatus()
     }
   },
   computed: {
@@ -78,21 +122,21 @@ Vue.createApp({
     },
     // Computed property for disabling and enabling special attack on every 3rd round
     specialAttackIsAvailable() {
-      if (this.currentRound % 3 !== 0) {
-        return true;
+      if (this.specialAttacks === 0) {
+        return false;
       } else {
-        return false
+        return true
       }
     },
     // Computed property tracking available heals 
     canHeal() {
-      console.log(this.heals)
       if (this.heals === 0) {
         return false
       } else {
         return true
       }
-    }
+    },
+  },
 
-  }
+
 }).mount("#game");
