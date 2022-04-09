@@ -16,6 +16,10 @@
     <h1>Monster Slayer</h1>
   </header>
   <div id="game">
+    <section id="healStatus" class="container">
+      <h2>Available Heals</h2>
+      <h2>{{heals}}</h2>
+    </section>
     <section id="monster" class="container">
       <h2>Monster Health</h2>
       <div class="healthbar">
@@ -31,7 +35,7 @@
     <section id="controls">
       <button @click="attackMonster">ATTACK</button>
       <button @click="specialAttack" :disabled="specialAttackIsAvailable">SPECIAL ATTACK</button>
-      <button>HEAL</button>
+      <button @click="healPlayer" :disabled="!canHeal">HEAL</button>
       <button>SURRENDER</button>
     </section>
     <section id="log" class="container">

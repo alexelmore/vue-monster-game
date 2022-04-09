@@ -8,7 +8,8 @@ Vue.createApp({
     return {
       playerHealth: 100,
       monsterHealth: 100,
-      currentRound: 0
+      currentRound: 0,
+      heals: 3
     };
   },
   methods: {
@@ -44,6 +45,27 @@ Vue.createApp({
 
       // Call attackPlayer function 
       this.attackPlayer()
+    },
+
+    // Function to heal player
+    healPlayer() {
+      // Increment round
+      this.currentRound++
+
+      // Decrement availableHeals
+      this.heals = this.heals - 1
+
+      // Const refernece to getRandomValue function, which then gets added  to the player's health
+      const healthValue = getRandomValue(10, 25)
+
+      if (this.playerHealth + healthValue > 100) {
+        this.playerHealth = 100
+      } else {
+        this.playerHealth += healthValue;
+      }
+
+      // Call attackPlayer function 
+      this.attackPlayer()
     }
   },
   computed: {
@@ -61,6 +83,16 @@ Vue.createApp({
       } else {
         return false
       }
+    },
+    // Computed property tracking available heals 
+    canHeal() {
+      console.log(this.heals)
+      if (this.heals === 0) {
+        return false
+      } else {
+        return true
+      }
     }
+
   }
 }).mount("#game");
