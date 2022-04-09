@@ -126,7 +126,7 @@ Vue.createApp({
     },
     // Computed property tracking available heals 
     canHeal() {
-      if (this.heals === 0) {
+      if (this.heals === 0 || this.playerHealth === 100) {
         return false
       } else {
         return true
