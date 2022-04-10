@@ -8,11 +8,11 @@ Vue.createApp({
     return {
       playerHealth: 100,
       monsterHealth: 100,
-      currentRound: 0,
       heals: 2,
       specialAttacks: 2,
       results: '',
-      gameOver: false
+      gameOver: false,
+      battleLog: []
     };
   },
   methods: {
@@ -23,6 +23,8 @@ Vue.createApp({
       // Const refernece to getRandomValue function, which then gets taken out of the monster's health per attack
       const attackValue = getRandomValue(5, 12)
       this.monsterHealth -= attackValue
+      // Update battleLog
+      this.updateBattleLog('Player', 'Attack', attackValue)
       // Call attackPlayer function 
       this.attackPlayer()
       // Call checkGameStatus function
@@ -34,6 +36,8 @@ Vue.createApp({
       // Const refernece to getRandomValue function, which then gets taken out of the player's health per attack
       const attackValue = getRandomValue(8, 15)
       this.playerHealth -= attackValue
+      // Update battleLog
+      this.updateBattleLog('Monster', 'Attack', attackValue)
     },
 
     // Function for a special attack
@@ -45,6 +49,8 @@ Vue.createApp({
       // Const refernece to getRandomValue function, which then gets taken out of the monster's health per attack
       const attackValue = getRandomValue(10, 25)
       this.monsterHealth -= attackValue
+      // Update battleLog
+      this.updateBattleLog('Player', 'Special Attack', attackValue)
       // Call attackPlayer function 
       this.attackPlayer()
       // Call checkGameStatus function
@@ -64,6 +70,8 @@ Vue.createApp({
       } else {
         this.playerHealth += healthValue;
       }
+      // Update battleLog
+      this.updateBattleLog('Player', 'Healing Boost', healthValue)
       // Call attackPlayer function 
       this.attackPlayer()
       // Call checkGameStatus function
@@ -91,12 +99,22 @@ Vue.createApp({
       this.heals = 2;
       this.specialAttacks = 2
       this.gameOver = false
+      this.battleLog = []
     },
 
     // Function the gets called if player decides to surrender
     bigLoser() {
       this.playerHealth = 0;
       this.checkGameStatus()
+    },
+
+    // Method for keeping track of the battle log
+    updateBattleLog(who, what, value) {
+      this.battleLog.push({
+        actionBy: who,
+        actionType: what,
+        actionValue: value
+      })
     }
   },
   computed: {

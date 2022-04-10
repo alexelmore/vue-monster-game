@@ -17,7 +17,7 @@
   </header>
   <div id="game">
     <section id="healStatus" class="container">
-      <h2>Available Heals: {{heals}}</h2>
+      <h2>Available Healing Boosts: {{heals}}</h2>
 
       <h2>Available Special Attacks: {{specialAttacks}}</h2>
     </section>
@@ -48,7 +48,26 @@
     </section>
     <section id="log" class="container" v-if="gameOver">
       <h2>Battle Log</h2>
-      <ul></ul>
+      <ul>
+
+        <li v-for="(logMessage, index) in battleLog">
+          Turn Number {{index + 1}}:
+          <span
+            :class="{'log--player': logMessage.actionBy === 'Player', 'log--monster': logMessage.actionBy === 'Monster'}">{{
+            logMessage.actionBy === 'Player' ? 'Player' : 'Monster'
+            }}</span>
+          <span v-if="logMessage.actionType === 'Healing Boost'">
+            heals themself for
+            <span class="log--heal">{{ logMessage.actionValue }}</span> points</span>
+          <span v-if="logMessage.actionType === 'Special Attack'">
+            uses a SPECIAL attack and deals
+            <span class="log--damage">{{ logMessage.actionValue }}</span> points of damage</span>
+          <span v-if="logMessage.actionType === 'Attack'">
+            attacks and deals
+            <span class="log--damage">{{ logMessage.actionValue }}</span> points of damage
+          </span>
+        </li>
+      </ul>
     </section>
   </div>
 </body>
